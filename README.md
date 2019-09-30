@@ -1,28 +1,50 @@
-# Hydration App #
+# Hydro Pets
+> A hydration app that tracks your water intake with virtual pets.
 
-## Heading ##
-  > Hydro Pets
+[![NPM Version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+[![Downloads Stats][npm-downloads]][npm-url]
 
-## Sub-Heading ##
-  > This app will help the health-conscious user track their daily water intake and encourage them to keep hydrated!
+![](header.png)
 
-## Summary ##
-  > Hydro Pets ties drinking water with taking care of a virtual pet. It grows or withers based on whether you're taking care of yourself.
+## Installation
 
-## Problem ##
-  > Drinking 8 cups of liquids daily is an easily forgotten task if you're not naturally inclined to keep drinking.
+OS X
 
-## Solution ##
-  > Hydro Pets gives you a way to track your intake and rewards you for drinking clear liquids.
+```sh
+npm install
+```
 
-## Quote from You ##
-  > "Hydro Pets is a fun, simple solution for people who want to live healthier and get enough fluids."
+## Usage example
 
-## How to Get Started ##
-  > Download the app today and start it up!
+A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
 
-## Customer Quote ##
-  > "Normally I get so busy I forget to drink enough water, but now I find myself checking my app to see how my pet is doing. I've met my daily liquids goals for the first time in years!"
+_For more examples and usage, please refer to the [Wiki][wiki]._
 
-## Closing and Call to Action ##
-  > Tap to pick up your first jelly seed today and see what it grows into!
+## Development setup
+
+Uses Node version 10.16.
+
+```sh
+make install
+npm test
+```
+
+## Release History
+
+* 0.0.1
+    * Work in progress
+
+## Meta
+
+Your Name – [@jessicayyu](https://github.com/jessicayyu/)
+
+[https://github.com/jessicayyu/hydration-app](https://github.com/jessicayyu/hydration-app)
+
+<!-- Markdown link & img dfn's -->
+[npm-image]: https://img.shields.io/npm/v/datadog-metrics.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/datadog-metrics
+[npm-downloads]: https://img.shields.io/npm/dm/datadog-metrics.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
+[wiki]: https://github.com/yourname/yourproject/wiki

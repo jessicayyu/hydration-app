@@ -8,6 +8,7 @@
 
 import React from 'react';
 import {
+  ImageBackground,
   SafeAreaView,
   StyleSheet,
   ScrollView,
@@ -16,7 +17,8 @@ import {
   StatusBar,
   Image,
   Picker,
-  Button
+  Button,
+  Animated
 } from 'react-native';
 
 import {
@@ -25,54 +27,125 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Navbar from './Navbar.js';
+import AddWater from './AddWater.js';
 
-const App: () => React$Node = () => {
-  const date = new Date();
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const month = months[date.getMonth()];
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      waterQty: 28,
+      date: 'Today is...',
+      x: 40,
+      y: 0,
+      evolved: false
+    }
+    this.calculateDaily = this.calculateDaily.bind(this);
+    this.renderDate = this.renderDate.bind(this);
+    this.petPosition = new Animated.Value(0);
+  }
+
+  componentDidMount() {
+    this.renderDate();
+    this.petAnimate();
+  }
+
+  petAnimate () {
+    this.petPosition.setValue(0)
+    Animated.timing(
+      this.petPosition,
+      {
+        toValue: 8,
+        duration: 2000
+      }
+    ).start(() => this.petAnimate())
+  }
+
+  renderDate() {
+    const date = new Date();
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = months[date.getMonth()];
+    const dateToday = months[date.getMonth()] + ' ' +  date.getDate() + ', ' + date.getFullYear();
+    this.setState({ date: dateToday });
+  }
+
+  calculateDaily(qty, unit) {
+    let waterTotal = Number(this.state.waterQty);
+    if (unit === 'cup') {
+      waterTotal += 8 * qty;
+    } else {
+      waterTotal += Number(qty);
+    }
+    if (!this.state.evolved && waterTotal >= 32) {
+      this.setState({ evolved: true });
+      setTimeout(() => { this.setState({ evolved: false }) }, 100);
+      setTimeout(() => { this.setState({ evolved: true })}, 200);
+      setTimeout(() => { this.setState({ evolved: false })}, 400);
+      setTimeout(() => {
+        this.setState({ evolved: true });
+      }, 800);
+    }
+    this.setState({ waterQty: waterTotal });
+  }
+
+  render() {
+    let ozToday = this.state.waterQty % 8;
+    let cupsToday = (this.state.waterQty  - ozToday) / 8;
+    const movingX = this.petPosition.interpolate({
+      inputRange: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      outputRange: [80, 100, 80, 60, 30, 0, 30, 60, 80 ]
+    });
+    const movingY = this.petPosition.interpolate({
+      inputRange: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      outputRange: [0, 20, 0, 20, 10, 5, 20, 10, 5]
+    });
+    let petImg = 'https://imgur.com/cdmcbDZ.gif';
+    if (this.state.evolved) {
+      petImg = 'https://imgur.com/Jod8Gd6.gif';
+    }
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>{month + ' ' + date.getDate() + ', ' + date.getFullYear()}</Text>
-              <Text style={styles.sectionTitle}>Welcome to Hydro Pets!</Text>
-              <Text style={styles.sectionDescription}>
-                You've drank <Text style={styles.highlight}>3 cups 4 oz</Text> of water today!{'\n'}
-                {'\n'}
-                Blobby is looking pretty cheerful.{'\n'}
-              </Text>
-              <Image style={styles.pet} source={require('./img/cat.gif')}/>
-              <Text style={styles.sectionDescription}>
-                Water Blobby?
-              </Text>
-              <Picker style={styles.picker} >
-                <Picker.item label="0" value="0" />
-                <Picker.item label="1" value="1" />
-                <Picker.item label="2" value="2" />
-                <Picker.item label="3" value="3" />
-              </Picker>
-              <Picker style={styles.picker} >
-                <Picker.item label="oz" value="oz" />
-                <Picker.item label="cup" value="cup" />
-              </Picker>
-              <Button title="Water"/>
-
-            </View>
+    <StatusBar barStyle="dark-content" />
+    <ImageBackground source={require('./img/bgtile.png')} style={{width: "100%", height: "100%"}} resizeMode="repeat">
+    <SafeAreaView style={{ marginTop: 10, paddingBottom: 30}}>
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={styles.scrollView}>
+        {global.HermesInternal == null ? null : (
+          <View style={styles.engine}>
+            <Text style={styles.footer}>Engine: Hermes</Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+        )}
+        <View style={styles.body}>
+          <Navbar />
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>{this.state.date}</Text>
+            <Text style={styles.sectionTitle}>Welcome back, Leslie!</Text>
+            <Text style={styles.sectionDescription}>
+              You've drank <Text style={styles.highlight}>{Boolean(cupsToday) && `${cupsToday} cups`} {ozToday} oz</Text> of water today!{'\n'}
+              {'\n'}
+              <Text style={styles.highlight}>Blobby</Text> is looking pretty cheerful.{'\n'}
+            </Text>
+            <Animated.Image style={{
+              display: 'flex',
+              width: 200,
+              height: 200,
+              position: "relative",
+              left: movingX,
+              bottom: movingY
+            }} source={{ uri: petImg }}/>
+            <Text style={styles.sectionDescription}>
+              Would you like to water <Text style={styles.highlight}>Blobby</Text>?
+            </Text>
+            <AddWater calculateDaily={this.calculateDaily} />
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+    </ImageBackground>
     </>
   );
+  }
 };
 
 const styles = StyleSheet.create({
@@ -87,8 +160,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   sectionContainer: {
-    marginTop: 32,
     paddingHorizontal: 24,
+    paddingTop: 10,
+    paddingBottom: 80,
   },
   sectionTitle: {
     fontSize: 24,
@@ -112,16 +186,7 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     textAlign: 'right',
   },
-  pet: {
-    width: 200,
-    height: 200,
-    display: 'flex'
-  },
-  picker: {
-    display: 'flex',
-    flexDirection: "row",
-    width: 175
-  }
+
 });
 
 export default App;

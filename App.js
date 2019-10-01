@@ -17,7 +17,8 @@ import {
   StatusBar,
   Image,
   Picker,
-  Button
+  Button,
+  Animated
 } from 'react-native';
 
 import {
@@ -32,29 +33,61 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      waterQty: 20,
+      waterQty: 6,
+      date: 'Today is...',
+      x: 40,
+      y: 0,
     }
     this.calculateDaily = this.calculateDaily.bind(this);
+    this.renderDate = this.renderDate.bind(this);
+    this.petPosition = new Animated.Value(0);
+  }
+
+  componentDidMount() {
+    this.renderDate();
+    this.petAnimate();
+  }
+
+  petAnimate () {
+    this.petPosition.setValue(0)
+    Animated.timing(
+      this.petPosition,
+      {
+        toValue: 5,
+        duration: 2000,
+      }
+    ).start(() => this.petAnimate())
+  }
+
+  renderDate() {
+    const date = new Date();
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = months[date.getMonth()];
+    const dateToday = months[date.getMonth()] + ' ' +  date.getDate() + ', ' + date.getFullYear();
+    this.setState({ date: dateToday });
   }
 
   calculateDaily(qty, unit) {
     let waterTotal = Number(this.state.waterQty);
-    console.log('calcDaily click');
     if (unit === 'cup') {
       waterTotal += 8 * qty;
     } else {
       waterTotal += Number(qty);
     }
-    console.log('waterTotal: ' + waterTotal);
     this.setState({ waterQty: waterTotal });
   }
 
   render() {
-    const date = new Date();
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const month = months[date.getMonth()];
     let ozToday = this.state.waterQty % 8;
     let cupsToday = (this.state.waterQty  - ozToday) / 8;
+    const movingX = this.petPosition.interpolate({
+      inputRange: [0, 1, 2, 3, 4, 5],
+      outputRange: [0, 10, 30, 20, 10, 0]
+    });
+    const movingY = this.petPosition.interpolate({
+      inputRange: [0, 1, 2, 3, 4, 5],
+      outputRange: [0, 20, 0, 20, 10, 5]
+    });
   return (
     <>
     <StatusBar barStyle="dark-content" />
@@ -70,14 +103,21 @@ class App extends React.Component {
         )}
         <View style={styles.body}>
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>{month + ' ' + date.getDate() + ', ' + date.getFullYear()}</Text>
-            <Text style={styles.sectionTitle}>Welcome to Hydro Pets!</Text>
+            <Text style={styles.sectionTitle}>{this.state.date}</Text>
+            <Text style={styles.sectionTitle}>Welcome back, Leslie!</Text>
             <Text style={styles.sectionDescription}>
-              You've drank <Text style={styles.highlight}>{cupsToday} cups {ozToday} oz</Text> of water today!{'\n'}
+              You've drank <Text style={styles.highlight}>{Boolean(cupsToday) && `${cupsToday} cups`} {ozToday} oz</Text> of water today!{'\n'}
               {'\n'}
               <Text style={styles.highlight}>Blobby</Text> is looking pretty cheerful.{'\n'}
             </Text>
-            <Image style={styles.pet} source={require('./img/cat.gif')}/>
+            <Animated.Image style={{
+              display: 'flex',
+              width: 200,
+              height: 200,
+              position: "relative",
+              left: movingX,
+              bottom: movingY
+            }} source={require('./img/cat.gif')}/>
             <Text style={styles.sectionDescription}>
               Would you like to water <Text style={styles.highlight}>Blobby</Text>?
             </Text>
@@ -129,11 +169,6 @@ const styles = StyleSheet.create({
     padding: 4,
     paddingRight: 12,
     textAlign: 'right',
-  },
-  pet: {
-    width: 200,
-    height: 200,
-    display: 'flex'
   },
 
 });

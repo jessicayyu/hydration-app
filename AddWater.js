@@ -29,7 +29,7 @@ class AddWater extends React.Component {
         <Picker.Item label="oz" value="oz" />
         <Picker.Item label="cup" value="cup" />
       </Picker>
-      <Button title="Water" onPress={() => {
+      <Button color="#00b3dd" style={styles.button} title="Water" onPress={() => {
         this.props.calculateDaily(this.state.waterQuantity, this.state.waterUnit);
       }}/>
       <Text>{'\n'}</Text>
@@ -43,6 +43,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: "row",
     width: 175
+  },
+  button: {
+    borderRadius: 5
   }
 })
 

@@ -31,11 +31,30 @@ import AddWater from './AddWater.js';
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      waterQty: 20,
+    }
+    this.calculateDaily = this.calculateDaily.bind(this);
   }
+
+  calculateDaily(qty, unit) {
+    let waterTotal = Number(this.state.waterQty);
+    console.log('calcDaily click');
+    if (unit === 'cup') {
+      waterTotal += 8 * qty;
+    } else {
+      waterTotal += Number(qty);
+    }
+    console.log('waterTotal: ' + waterTotal);
+    this.setState({ waterQty: waterTotal });
+  }
+
   render() {
     const date = new Date();
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const month = months[date.getMonth()];
+    let ozToday = this.state.waterQty % 8;
+    let cupsToday = (this.state.waterQty  - ozToday) / 8;
   return (
     <>
     <StatusBar barStyle="dark-content" />
@@ -54,7 +73,7 @@ class App extends React.Component {
             <Text style={styles.sectionTitle}>{month + ' ' + date.getDate() + ', ' + date.getFullYear()}</Text>
             <Text style={styles.sectionTitle}>Welcome to Hydro Pets!</Text>
             <Text style={styles.sectionDescription}>
-              You've drank <Text style={styles.highlight}>3 cups 4 oz</Text> of water today!{'\n'}
+              You've drank <Text style={styles.highlight}>{cupsToday} cups {ozToday} oz</Text> of water today!{'\n'}
               {'\n'}
               <Text style={styles.highlight}>Blobby</Text> is looking pretty cheerful.{'\n'}
             </Text>
@@ -62,7 +81,7 @@ class App extends React.Component {
             <Text style={styles.sectionDescription}>
               Would you like to water <Text style={styles.highlight}>Blobby</Text>?
             </Text>
-            <AddWater />
+            <AddWater calculateDaily={this.calculateDaily} />
           </View>
         </View>
       </ScrollView>

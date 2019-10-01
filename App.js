@@ -53,8 +53,8 @@ class App extends React.Component {
     Animated.timing(
       this.petPosition,
       {
-        toValue: 5,
-        duration: 2000,
+        toValue: 8,
+        duration: 1500
       }
     ).start(() => this.petAnimate())
   }
@@ -81,12 +81,12 @@ class App extends React.Component {
     let ozToday = this.state.waterQty % 8;
     let cupsToday = (this.state.waterQty  - ozToday) / 8;
     const movingX = this.petPosition.interpolate({
-      inputRange: [0, 1, 2, 3, 4, 5],
-      outputRange: [0, 10, 30, 20, 10, 0]
+      inputRange: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      outputRange: [0, 20, 50, 70, 100, 80, 60, 40, 20]
     });
     const movingY = this.petPosition.interpolate({
-      inputRange: [0, 1, 2, 3, 4, 5],
-      outputRange: [0, 20, 0, 20, 10, 5]
+      inputRange: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      outputRange: [0, 20, 0, 20, 10, 5, 20, 10, 5]
     });
   return (
     <>

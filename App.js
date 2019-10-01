@@ -8,6 +8,7 @@
 
 import React from 'react';
 import {
+  ImageBackground,
   SafeAreaView,
   StyleSheet,
   ScrollView,
@@ -25,8 +26,12 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import AddWater from './AddWater.js';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     const date = new Date();
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -34,7 +39,8 @@ class App extends React.Component {
   return (
     <>
     <StatusBar barStyle="dark-content" />
-    <SafeAreaView>
+    <ImageBackground source={require('./img/bgtile.png')} style={{width: "100%", height: "100%"}} resizeMode="repeat">
+    <SafeAreaView style={{marginTop: 30, paddingBottom: 30}}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollView}>
@@ -56,22 +62,12 @@ class App extends React.Component {
             <Text style={styles.sectionDescription}>
               Would you like to water <Text style={styles.highlight}>Blobby</Text>?
             </Text>
-            <Picker style={styles.picker} >
-              <Picker.Item label="0" value="0" />
-              <Picker.Item label="1" value="1" />
-              <Picker.Item label="2" value="2" />
-              <Picker.Item label="3" value="3" />
-            </Picker>
-            <Picker style={styles.picker} >
-              <Picker.Item label="oz" value="oz" />
-              <Picker.Item label="cup" value="cup" />
-            </Picker>
-            <Button title="Water"/>
-
+            <AddWater />
           </View>
         </View>
       </ScrollView>
     </SafeAreaView>
+    </ImageBackground>
     </>
   );
   }
@@ -91,6 +87,7 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
+    paddingBottom: 80,
   },
   sectionTitle: {
     fontSize: 24,
@@ -119,11 +116,7 @@ const styles = StyleSheet.create({
     height: 200,
     display: 'flex'
   },
-  picker: {
-    display: 'flex',
-    flexDirection: "row",
-    width: 175
-  }
+
 });
 
 export default App;

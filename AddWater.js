@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Picker, Button, Text } from 'react-native';
+import { StyleSheet, Picker, TouchableOpacity, Text } from 'react-native';
 
 class AddWater extends React.Component {
   constructor(props) {
@@ -29,9 +29,11 @@ class AddWater extends React.Component {
         <Picker.Item label="oz" value="oz" />
         <Picker.Item label="cup" value="cup" />
       </Picker>
-      <Button color="#00b3dd" style={styles.button} title="Water" onPress={() => {
+      <TouchableOpacity style={styles.button} title="Water" onPress={() => {
         this.props.calculateDaily(this.state.waterQuantity, this.state.waterUnit);
-      }}/>
+      }}>
+        <Text style={{color: "#ffffff", fontSize: 18}}>Water</Text>
+      </TouchableOpacity>
       <Text>{'\n'}</Text>
       </>
     )
@@ -45,8 +47,11 @@ const styles = StyleSheet.create({
     width: 175
   },
   button: {
-    borderRadius: 5
+    backgroundColor: "#00b3dd",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 20
   }
-})
+});
 
 export default AddWater;

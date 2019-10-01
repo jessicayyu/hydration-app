@@ -27,16 +27,18 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Navbar from './Navbar.js';
 import AddWater from './AddWater.js';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      waterQty: 6,
+      waterQty: 28,
       date: 'Today is...',
       x: 40,
       y: 0,
+      evolved: false
     }
     this.calculateDaily = this.calculateDaily.bind(this);
     this.renderDate = this.renderDate.bind(this);
@@ -54,7 +56,7 @@ class App extends React.Component {
       this.petPosition,
       {
         toValue: 8,
-        duration: 1500
+        duration: 2000
       }
     ).start(() => this.petAnimate())
   }
@@ -74,6 +76,15 @@ class App extends React.Component {
     } else {
       waterTotal += Number(qty);
     }
+    if (!this.state.evolved && waterTotal >= 32) {
+      this.setState({ evolved: true });
+      setTimeout(() => { this.setState({ evolved: false }) }, 100);
+      setTimeout(() => { this.setState({ evolved: true })}, 200);
+      setTimeout(() => { this.setState({ evolved: false })}, 400);
+      setTimeout(() => {
+        this.setState({ evolved: true });
+      }, 800);
+    }
     this.setState({ waterQty: waterTotal });
   }
 
@@ -82,17 +93,21 @@ class App extends React.Component {
     let cupsToday = (this.state.waterQty  - ozToday) / 8;
     const movingX = this.petPosition.interpolate({
       inputRange: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-      outputRange: [0, 20, 50, 70, 100, 80, 60, 40, 20]
+      outputRange: [80, 100, 80, 60, 30, 0, 30, 60, 80 ]
     });
     const movingY = this.petPosition.interpolate({
       inputRange: [0, 1, 2, 3, 4, 5, 6, 7, 8],
       outputRange: [0, 20, 0, 20, 10, 5, 20, 10, 5]
     });
+    let petImg = 'https://imgur.com/cdmcbDZ.gif';
+    if (this.state.evolved) {
+      petImg = 'https://imgur.com/Jod8Gd6.gif';
+    }
   return (
     <>
     <StatusBar barStyle="dark-content" />
     <ImageBackground source={require('./img/bgtile.png')} style={{width: "100%", height: "100%"}} resizeMode="repeat">
-    <SafeAreaView style={{marginTop: 30, paddingBottom: 30}}>
+    <SafeAreaView style={{ marginTop: 10, paddingBottom: 30}}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={styles.scrollView}>
@@ -102,6 +117,7 @@ class App extends React.Component {
           </View>
         )}
         <View style={styles.body}>
+          <Navbar />
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>{this.state.date}</Text>
             <Text style={styles.sectionTitle}>Welcome back, Leslie!</Text>
@@ -117,7 +133,7 @@ class App extends React.Component {
               position: "relative",
               left: movingX,
               bottom: movingY
-            }} source={require('./img/cat.gif')}/>
+            }} source={{ uri: petImg }}/>
             <Text style={styles.sectionDescription}>
               Would you like to water <Text style={styles.highlight}>Blobby</Text>?
             </Text>
@@ -144,8 +160,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   sectionContainer: {
-    marginTop: 32,
     paddingHorizontal: 24,
+    paddingTop: 10,
     paddingBottom: 80,
   },
   sectionTitle: {

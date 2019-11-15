@@ -9,14 +9,16 @@ class Navbar extends React.Component {
   render() {
     return (
       <View style={styles.navbar}>
-        <TouchableOpacity style={styles.button}>
-          <Text styles={styles.text}>Main</Text>
+        <TouchableOpacity style={styles.button} onPress={ () => { this.props.navigate(0) }
+        }>
+          <Text style={styles.text}>Main</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}  onPress={ () => { this.props.navigate(1) }
+        }>
+          <Text style={styles.text}>History</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
-          <Text styles={styles.text}>History</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text styles={styles.text}>Collection</Text>
+          <Text style={styles.text}>Collection</Text>
         </TouchableOpacity>
       </View>
     )

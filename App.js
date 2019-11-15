@@ -29,6 +29,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import Navbar from './Navbar.js';
 import AddWater from './AddWater.js';
+import History from './History.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -38,10 +39,12 @@ class App extends React.Component {
       date: 'Today is...',
       x: 40,
       y: 0,
-      evolved: false
+      evolved: false,
+      page: 0
     }
     this.calculateDaily = this.calculateDaily.bind(this);
     this.renderDate = this.renderDate.bind(this);
+    this.navigate = this.navigate.bind(this);
     this.petPosition = new Animated.Value(0);
   }
 
@@ -59,6 +62,10 @@ class App extends React.Component {
         duration: 2000
       }
     ).start(() => this.petAnimate())
+  }
+
+  navigate(input) {
+    this.setState({ page: input });
   }
 
   renderDate() {
@@ -103,6 +110,7 @@ class App extends React.Component {
     if (this.state.evolved) {
       petImg = 'https://imgur.com/Jod8Gd6.gif';
     }
+    if (this.state.page === 0) {
   return (
     <>
     <StatusBar barStyle="dark-content" />
@@ -117,7 +125,7 @@ class App extends React.Component {
           </View>
         )}
         <View style={styles.body}>
-          <Navbar />
+          <Navbar navigate={this.navigate} />
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>{this.state.date}</Text>
             <Text style={styles.sectionTitle}>Welcome back, Leslie!</Text>
@@ -145,7 +153,31 @@ class App extends React.Component {
     </ImageBackground>
     </>
   );
+  } else {
+    return (
+      <>
+      <StatusBar barStyle="dark-content" />
+      <ImageBackground source={require('./img/bgtile.png')} style={{width: "100%", height: "100%"}} resizeMode="repeat">
+      <SafeAreaView style={{ marginTop: 10, paddingBottom: 30}}>
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={styles.scrollView}>
+          {global.HermesInternal == null ? null : (
+            <View style={styles.engine}>
+              <Text style={styles.footer}>Engine: Hermes</Text>
+            </View>
+          )}
+          <View style={styles.body}>
+            <Navbar navigate={this.navigate} />
+            <History />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+      </ImageBackground>
+      </>
+    )
   }
+  } // render closing tag
 };
 
 const styles = StyleSheet.create({

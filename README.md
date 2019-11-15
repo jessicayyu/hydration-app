@@ -30,7 +30,9 @@ Uses Node version 10.16.
 ## API Routes
 |Operation|Route|
 |-|-|
-|GET|`/user/id/water`|
+|GET|`/user/:id/water`|
+
+Retrieves the user liquid intake history. User id is referenced in request parameters `:id`
 
 ## Meta
 
@@ -40,3 +42,4 @@ Your Name – [@jessicayyu](https://github.com/jessicayyu/)
 
 <!-- Markdown link & img dfn's -->
 [npm-image]: https://img.shields.io/npm/v/datadog-metrics.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/datadog-metrics
